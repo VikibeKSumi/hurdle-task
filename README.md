@@ -1,10 +1,16 @@
-# hurdle-task #3 – FastAPI AI Microservice
+# FastAPI AI Microservice (hurdle-task #3)
 
 Hurdle task for NagaEd screening.  
 
 Name - Vikibe K Sumi  
 Ph - +91 7629998601  
 Email - vikibesumi3010@gmail.com  
+
+## Features
+- **API service** - exposed api for external systems to utilize our service.
+- **Secrets in .env** - secrets stored in .env and not hardcoded for security.
+- **Prompt design** - defined role of the llm and instructions to follow.
+- **LLM api integration** - integrated llm inference provider to generate response.
 
 ## Tools 
 - Python
@@ -41,6 +47,7 @@ python -m uvicorn app:app --port 8000
 | --- | --- |
 | Parallel line | Http request |
 | Plain line | Call flow |
+
 ## Non goals
 - No memory
 - No multi-turn chat
