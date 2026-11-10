@@ -1,26 +1,26 @@
-
-from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.runnables import Runnable
+
 class Chat():
     def __init__(
             self,
             chain: Runnable,
-            conversation_history: dict,
-            sessions: dict,
         ):
         self.chain = chain
-        self.conversation_history = conversation_history
-        self.sessions = sessions
 
-    def get_chain(self, interest: str, session_id: str):
-        self.conversation_history = self.sessions.setdefault(session_id, [])
-        return self.chain.invoke({"history": self.conversation_history, "interest": interest})
+    def get_chain(self, interest: str):
+        return self.chain.invoke(input={"interest": interest})
 
-    def chat(self, interest: str, session_id: str):
-        response = self.get_chain(interest=interest, session_id=session_id)
-        self.conversation_history.append(HumanMessage(content=interest))
-        self.conversation_history.append(AIMessage(content=response.model_dump_json()))
+    def chat(self, interest: str):
+        response = self.get_chain(interest=interest)
         return response
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -33,7 +33,6 @@ if __name__ == "__main__":
 
     class UsernameOutput(BaseModel):
         usernames: list[str] = Field(description="List of three usernames based on interest provided.")
-
 
     system_prompt = """
         Generate three username based on the given interest.
@@ -52,7 +51,5 @@ if __name__ == "__main__":
     chain = prompt | llm_structured_output
     chat = Chat(
         chain=chain,
-        conversation_history={},
-        sessions={},
     )
-    print(chat.chat(interest="puppies", session_id="123").model_dump(mode='json')["usernames"])
+    print(chat.chat(interest="puppies").model_dump(mode='json')["usernames"])

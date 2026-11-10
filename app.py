@@ -17,19 +17,22 @@ class InterestInput(BaseModel):
     interest: str = Field(description="a unique interest")
 
 class UsernameOutput(BaseModel):
-    usernames: list[str] = Field(description="List of three usernames based on interest provided.")
+    suggestions: list[str] = Field(description="List of three usernames based on interest provided.")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
         system_prompt = """
-            Suggest three unique usernames for the given interest below.
+            You are a creative username generator.
+            
+            INSTRUCTION:
+            1. You will receive an interest from the user.
+            2. Use that interest to generate three unique and creative usernames.
         """
 
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),
-            MessagesPlaceholder("history"),
             ("human", "{interest}")
         ])
 
@@ -39,13 +42,10 @@ async def lifespan(app: FastAPI):
         )
         llm_structured_output = llm.with_structured_output(UsernameOutput)
         chain = prompt | llm_structured_output
-        conversation_history = {}
-        sessions = {}
+    
 
         app.state.chat = Chat(
-            chain=chain,
-            conversation_history=conversation_history,
-            sessions=sessions
+            chain=chain
         )
     except Exception as e:
         print(f"An error occured {e}")
@@ -62,11 +62,11 @@ def home():
         "satus": "Page is live"
     }
 
-@app.post("/api/suggest-username")
-def get_usernames(input: InterestInput, request: Request):
+@app.post("/api/suggest-username", response_model=UsernameOutput)
+def suggest_usernames(input: InterestInput, request: Request):
     try:
-        response = app.state.chat.chat(interest=input.interest, session_id="viki")
-        return UsernameOutput(usernames=response.model_dump()['usernames'])
+        response = app.state.chat.chat(interest=input.interest)
+        return response
     
     except Exception as e:
         logging.error("suggest-username failed: %s", e)
