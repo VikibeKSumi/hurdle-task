@@ -18,6 +18,7 @@ Email - vikibesumi3010@gmail.com
 1. Clone
 ```bash
 git clone https://github.com/VikibeKSumi/hurdle-task.git
+cd hurdle-task
 ```
 
 2. Setup '.env' in root
@@ -29,8 +30,8 @@ GROQ_API_KEY=
 ```python
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn app:app --port 8000
+python -m pip install -r requirements.txt
+python -m uvicorn app:app --port 8000
 ```
 
 ## Non goals
