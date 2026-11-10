@@ -1,6 +1,6 @@
-# hurdle-task
+# hurdle-task #3 – FastAPI AI Microservice
 
-Hurdle task for NagaEd screening. # Task 3 
+Hurdle task for NagaEd screening.  
 
 Name - Vikibe K Sumi  
 Ph - +91 7629998601  
@@ -13,17 +13,27 @@ Email - vikibesumi3010@gmail.com
 - OpenAI
 - Langchain
 
-## Quick setup
+## Setup
 
 1. Clone
 ```bash
 git clone https://github.com/VikibeKSumi/hurdle-task.git
 ```
-2
+
+2. Setup '.env' in root
+```
+GROQ_API_KEY=
+```
+
+3. Quick run
 ```python
 python -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
 uvicorn app:app --port 8000
 ```
-## Setup
+
+## Non goals
+- No memory
+- No multi-turn chat
+
