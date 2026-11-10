@@ -1,6 +1,6 @@
 from langchain_core.runnables import Runnable
 
-class Chat():
+class ChatService(): # Wrapping the chat functionality as one service
     def __init__(
             self,
             chain: Runnable,
@@ -17,12 +17,7 @@ class Chat():
 
 
 
-
-
-
-
-
-
+# Quick testing
 if __name__ == "__main__":
     from pydantic import Field, BaseModel
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder

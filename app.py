@@ -1,26 +1,27 @@
-import os, traceback
-import logging
+import os, logging
 from dotenv import load_dotenv
 load_dotenv()
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 from chat import Chat
 
 
 
 class InterestInput(BaseModel):
+    model_config = ConfigDict(extra="forbid") # input cannot accept any undefined fields
     interest: str = Field(description="a unique interest")
 
 class UsernameOutput(BaseModel):
+    model_config = ConfigDict(frozen=True) # output cannot be altered
     suggestions: list[str] = Field(description="List of three usernames based on interest provided.")
 
 
-@asynccontextmanager
+# initialize all values at API startup
+@asynccontextmanager 
 async def lifespan(app: FastAPI):
     try:
         system_prompt = """
@@ -29,6 +30,7 @@ async def lifespan(app: FastAPI):
             INSTRUCTION:
             1. You will receive an interest from the user.
             2. Use that interest to generate three unique and creative usernames.
+            3. Do not answer anything beyond generating creative usernames.
         """
 
         prompt = ChatPromptTemplate.from_messages([
@@ -43,13 +45,13 @@ async def lifespan(app: FastAPI):
         llm_structured_output = llm.with_structured_output(UsernameOutput)
         chain = prompt | llm_structured_output
     
-
         app.state.chat = Chat(
             chain=chain
         )
     except Exception as e:
         print(f"An error occured {e}")
         raise
+
     yield
 
 
