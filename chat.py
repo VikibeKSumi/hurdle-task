@@ -44,7 +44,7 @@ if __name__ == "__main__":
     )
     llm_structured_output = llm.with_structured_output(UsernameOutput)
     chain = prompt | llm_structured_output
-    chat = Chat(
+    chat = ChatService(
         chain=chain,
     )
     print(chat.chat(interest="puppies").model_dump(mode='json')["usernames"])

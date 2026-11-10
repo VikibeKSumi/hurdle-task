@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
-from chat import Chat
+from chat import ChatService
 
 
 
@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
         llm_structured_output = llm.with_structured_output(UsernameOutput)
         chain = prompt | llm_structured_output
     
-        app.state.chat = Chat(
+        app.state.chat = ChatService(
             chain=chain
         )
     except Exception as e:
