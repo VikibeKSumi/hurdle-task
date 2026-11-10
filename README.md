@@ -34,6 +34,13 @@ python -m pip install -r requirements.txt
 python -m uvicorn app:app --port 8000
 ```
 
+## System diagram
+![system diagram](system_diagram.svg)
+
+| Legend | Meaning |
+| --- | --- |
+| Parallel line | Http request |
+| Plain line | Call flow |
 ## Non goals
 - No memory
 - No multi-turn chat
